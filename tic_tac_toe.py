@@ -4,20 +4,15 @@ import random
 board = ['|   |','|   |','|   |',
              '|   |','|   |','|   |','|   |','|   |','|   |']
 board_map = ['| 1 |','| 2 |','| 3 |',
-             '| 4 |','| 5 |','| 6 |','| 7 |','| 8 |','| 9 |']
+             '| 4 |','| 5 |','| 6 |',
+             '| 7 |','| 8 |','| 9 |']
 
-
-# In case game repeats, reset board games
-reset_board = ['|   |','|   |','|   |',
-             '|   |','|   |','|   |','|   |','|   |','|   |']
-reset_board_map = ['| 1 |','| 2 |','| 3 |',
-             '| 4 |','| 5 |','| 6 |','| 7 |','| 8 |','| 9 |']
-
-
+valid_answers = ['y','n']
 valid_player_answers = ['1','2','3','4','5','6','7','8','9']
-reset_answers = ['1','2','3','4','5','6','7','8','9']
 player_1_answer = "| X |"
 player_2_answer = "| O |"
+player_1_win = ["| X |", "| X |", "| X |"]
+player_2_win = ["| O |", "| O |", "| O |"]
 
 
 
@@ -45,7 +40,22 @@ def check_play(position):
     return False   
 
 def check_win():
-    pass
+    # Check horizontals
+    if board[0:3] == player_1_win or board[3:6] == player_1_win or board[6:] == player_1_win:
+        return 'player 1'
+    elif board[0:3] == player_2_win or board[3:6] == player_2_win or board[6:] == player_2_win:
+        return 'player 2'
+    # Check verticals
+    elif board[::3] == player_1_win or board[1::3] == player_1_win or board[2::3] == player_1_win:
+        return 'player 1'
+    elif board[::3] == player_2_win or board[1::3] == player_2_win or board[2::3] == player_2_win:
+        return 'player 2'
+    # Check diagonals
+    elif board[::4] == player_1_win or board[2:7:2] == player_1_win:
+        return 'player 1'
+    elif board[::4] == player_2_win or board[2:7:2] == player_2_win:
+        return 'player 2'
+    
 
 def full_board():
     # Function is called when no more options (no items in valid_player_answers) and determines if there is a tie or someone has won
@@ -62,7 +72,28 @@ def full_board():
 
 
 def play_again():
-    pass
+    # In case game repeats, reset board games
+    reset_board = ['|   |','|   |','|   |',
+                 '|   |','|   |','|   |','|   |','|   |','|   |']
+    reset_board_map = ['| 1 |','| 2 |','| 3 |',
+                 '| 4 |','| 5 |','| 6 |','| 7 |','| 8 |','| 9 |']
+    reset_answers = ['1','2','3','4','5','6','7','8','9']
+
+    global board, board_map, valid_player_answers
+
+    again_answer = input("Want to play another game? (y/n): ")
+
+    while again_answer not in valid_answers:
+        print("Invalid answer, please introduce correct answer")
+        again_answer = input("Want to play another game (y/n)?: ")
+    
+    if again_answer == 'y':
+        board = reset_board
+        board_map = reset_board_map
+        valid_player_answers = reset_answers
+        player_start()
+    elif again_answer == 'n':
+        print("Good bye!")
 
 
 def player_start():
@@ -144,7 +175,6 @@ def player_2_play():
             player_1_play()
 
 
-valid_answers = ['y','n']
 answer = input("Initiate tic-tac-toe (y/n)?: ")
 while answer not in valid_answers:
     print("Invalid answer, please introduce correct answer")
