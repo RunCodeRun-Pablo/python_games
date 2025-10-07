@@ -17,7 +17,7 @@ player_2_win = ["| O |", "| O |", "| O |"]
 
 
 def generate_board():
-    # Generate an interactive board that can be changed according to users' input
+    """Generate an interactive board that can be changed according to users' input"""
     board_1 = " ".join(board[0:3])
     board_2 = " ".join(board[3:6])
     board_3 = " ".join(board[6:])
@@ -25,7 +25,7 @@ def generate_board():
     print("\n".join((board_line,board_1,board_line,board_2,board_line,board_3,board_line)))
 
 def generate_board_map():
-    # Generate an board map that changes according to users' input and more visual available cell selection
+    """Generate an board map that changes according to users' input and more visual available cell selection"""
     board_1_map = " ".join(board_map[0:3])
     board_2_map = " ".join(board_map[3:6])
     board_3_map = " ".join(board_map[6:])
@@ -33,13 +33,14 @@ def generate_board_map():
     print("\n".join((board_line,board_1_map,board_line,board_2_map,board_line,board_3_map,board_line)))
 
 def check_play(position):
-    # Function determines whether an option is valid or not and then removes it to avoid picking it again
+    """Function determines whether an option is valid or not and then removes it to avoid picking it again"""
     if position in valid_player_answers:
         valid_player_answers.remove(position)
         return True
-    return False   
+    return False
 
 def check_win():
+    """Check if a player has won"""
     # Check horizontals
     if board[0:3] == player_1_win or board[3:6] == player_1_win or board[6:] == player_1_win:
         return 'player 1'
@@ -55,10 +56,10 @@ def check_win():
         return 'player 1'
     elif board[::4] == player_2_win or board[2:7:2] == player_2_win:
         return 'player 2'
-    
+
 
 def full_board():
-    # Function is called when no more options (no items in valid_player_answers) and determines if there is a tie or someone has won
+    """Function is called when no more options (no items in valid_player_answers) and determines if there is a tie or someone has won"""
     win = check_win()
     if win == 'player 1':
         print("Player 1 wins!")
@@ -72,7 +73,7 @@ def full_board():
 
 
 def play_again():
-    # In case game repeats, reset board games
+    """In case game repeats, reset board games"""
     reset_board = ['|   |','|   |','|   |',
                  '|   |','|   |','|   |','|   |','|   |','|   |']
     reset_board_map = ['| 1 |','| 2 |','| 3 |',
@@ -86,7 +87,7 @@ def play_again():
     while again_answer not in valid_answers:
         print("Invalid answer, please introduce correct answer")
         again_answer = input("Want to play another game (y/n)?: ")
-    
+
     if again_answer == 'y':
         board = reset_board
         board_map = reset_board_map
@@ -97,6 +98,7 @@ def play_again():
 
 
 def player_start():
+    """Determines which player starts the game"""
     player_options = [0, 1]
     start_answers = ['player 1', 'player 2', 'random']
     start = input("Select start player: \n" \
@@ -117,15 +119,16 @@ def player_start():
             print("Starts player 2")
             player_2_play()
 
+
 def player_1_play():
-    # Function to determine if player 1 answer is valid, save it and determine if there's a win, tie or game continues
-    generate_board_map()      
+    """Function to determine if player 1 answer is valid, save it and determine if there's a win, tie or game continues"""
+    generate_board_map()
     selection = input("Player 1, select position (use number map above to see available positions): ")
     valid_position = check_play(selection)
     while valid_position != True:
         selection = input("Invalid position, player 1 select again: ")
         valid_position = check_play(selection)
-        
+
     board[int(selection)-1] = player_1_answer
     board_map[int(selection)-1] = player_1_answer
 
@@ -143,19 +146,17 @@ def player_1_play():
             print("It's player 2 turn")
             generate_board()
             player_2_play()
-            
-
-  
+ 
 
 def player_2_play():
-    # Function to determine if player 2 answer is valid, save it and determine if there's a win, tie or game continues
-    generate_board_map()  
+    """Function to determine if player 2 answer is valid, save it and determine if there's a win, tie or game continues"""
+    generate_board_map()
     selection = input("Player 2, select position (use number map above to see available positions): ")
     valid_position = check_play(selection)
     while selection not in valid_player_answers and valid_position != True:
         selection = input("Invalid position, player 2 select again: ")
         valid_position = check_play(selection)
-        
+    
     board[int(selection)-1] = player_2_answer
     board_map[int(selection)-1] = player_2_answer
 
@@ -184,4 +185,3 @@ if answer == 'y':
     player_start()
 elif answer == 'n':
     print("Good bye!")
-
