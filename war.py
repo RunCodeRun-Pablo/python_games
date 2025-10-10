@@ -47,23 +47,69 @@ class Player:
         self.all_cards = []
     
     def remove_cards(self):
+        """Allows to show, compare and eliminate a player card"""
         return self.all_cards.pop(0)
     
     def add_cards(self,new_cards):
+        """Allows to take cards when a player wins a round"""
         if type(new_cards) == type([]):
             self.all_cards.extend(new_cards)
         else:
             self.all_cards.append(new_cards)
 
+    def restart(self):
+        "Resets player cards"
+        self.all_cards = []
+
     def __str__(self):
         return f"Player {self.name} has {len(self.all_cards)} cards."
     
-#Example
-player = Player("Pablo")
+player_1 = Player("player 1")
+player_2 = Player("player 2")
 deck = Deck()
-player.add_cards(deck.card())
-player.remove_cards()
-print(player)
+
+def tie():
+    pass
+
+def play():
+    """This function should take a card of each player, and compare them,
+    the player with the higher card will win, in case of equal card,
+    three cards should be taken by each player and the highest within them
+    will win the war (another func), the winner players gets all the cards"""
+    # For the future
+    # while not player_1.all_cards == 0 or not player_2.all_cards == 0:
+    card_1 = player_1.remove_cards()
+    card_2 = player_2.remove_cards()
+
+    if card_1.value == card_2.value:
+        tie()
+    elif card_1.value > card_2.value:
+        player_1.add_cards(card_1)
+        player_1.add_cards(card_1)
+    else:
+        player_2.add_cards(card_1)
+        player_2.add_cards(card_2)
+
+def start_game():
+    """Once created a deck, this func shuffles it,
+    and distributes it between both players"""
+
+    deck.shuffle()
+    for i in range(len(deck.all_cards) // 2):
+            player_1.add_cards(deck.card())
+            player_2.add_cards(deck.card())
+    
+    
+    
+
+
+
+    
+
+
+
+
+
 '''Como lo estoy entendiendo por ahora,
 es que una forma de hacerlo (seguro que hay más)
 es creando los diferentes objetos y luego usar los
