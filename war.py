@@ -68,85 +68,77 @@ deck = Deck()
 player_1 = Player("player 1")
 player_2 = Player("Player 2")
 
-def tie():
-    """ This cards resolves the tie
-    in case both players have the 
-    same card value"""
-    if len(player_1.all_cards) < 3:
-        return "player 2", player_2.all_cards
+deck.shuffle()
+
+for i in range(len(deck.all_cards) // 2):
+    player_1.add_cards(deck.card())
+    player_2.add_cards(deck.card())
     
-    if len(player_2.all_cards) < 3:
-        return "player 1", player_1.all_cards
+game_on = True
+round = 0
 
-    player_1_hand = [player_1.remove_cards() for i in range(3)]
-    player_2_hand = [player_2.remove_cards() for i in range(3)]
-    values_player_1_hand = [card.value for card in player_1_hand]
-    values_player_2_hand = [card.value for card in player_2_hand]
+while game_on:
 
-    while max(values_player_1_hand) == max(values_player_2_hand):
-        if len(player_1.all_cards) < 3:
-            return "player 2", player_1.all_cards + player_1_hand + player_2_hand
-        if len(player_2.all_cards) < 3:
-            return "player 1", player_2.all_cards + player_1_hand + player_2_hand
+    round += 1
+    print(f"Round {round}")
 
-        new_hand_1 = [player_1.remove_cards() for i in range(3)]
-        new_hand_2 = [player_2.remove_cards() for i in range(3)]
-        player_1_hand.extend(new_hand_1)
-        player_2_hand.extend(new_hand_2)
-        values_player_1_hand = [card.value for card in new_hand_1]
-        values_player_2_hand = [card.value for card in new_hand_2]
+    if len(player_1.all_cards) == 0:
+        print("Player 1 ran out of cards, player 2 wins")
+        game_on = False
+        break
 
-    if max(values_player_1_hand) > max(values_player_2_hand):
-        return "player 1", player_1_hand + player_2_hand
-    else:
-        return "player 2", player_1_hand + player_2_hand
- 
+    if len(player_2.all_cards) == 0:
+        print("Player 2 ran out of cards, player 1 wins")
+        game_on = False
+        break
 
-def play():
-    """This function should take a card of each player, and compare them,
-    the player with the higher card will win, in case of equal card,
-    three cards should be taken by each player and the highest within them
-    will win the war (another func), the winner players gets all the cards"""
-    # For the future
-    # while not player_1.all_cards == 0 or not player_2.all_cards == 0:
-    card_1 = player_1.remove_cards()
-    card_2 = player_2.remove_cards()
+    player_1_cards = []
+    player_1_cards.append(player_1.remove_cards())
+    
+    player_2_cards = []
+    player_2_cards.append(player_2.remove_cards())
+    
+    at_war = True
 
-    if card_1.value == card_2.value:
-        winner, cards = tie()
-        if winner == "player 1":
-            player_1.add_cards(cards)
-            player_1.add_cards([card_1,card_2])
+    while at_war:
+
+
+        if player_1_cards[-1].value > player_2_cards[-1].value:
+
+            player_1.add_cards(player_1_cards)
+            player_1.add_cards(player_2_cards)
+            
+            
+            at_war = False
+        
+        elif player_1_cards[-1].value < player_2_cards[-1].value:
+
+          
+            player_2.add_cards(player_1_cards)
+            player_2.add_cards(player_2_cards)
+            
+            # No Longer at "war" , time for next round
+            at_war = False
+
         else:
-            player_2.add_cards(cards)
-            player_2.add_cards([card_1,card_2])
-    elif card_1.value > card_2.value:
-        player_1.add_cards([card_1,card_2])
-    else:
-        player_2.add_cards([card_1,card_2])
+            print('WAR!')
 
-def start_game():
-    """Once created a deck, this func shuffles it,
-    and distributes it between both players"""
-    deck.shuffle()
-    for i in range(len(deck.all_cards) // 2):
-            player_1.add_cards(deck.card())
-            player_2.add_cards(deck.card())
-    
+            if len(player_1.all_cards) < 5:
+                print("Player One unable to play war! Game Over at War")
+                print("Player Two Wins! Player One Loses!")
+                game_on = False
+                break
 
-start_game()
-while len(player_1.all_cards) != 0 and len(player_2.all_cards) != 0:
-    play()
+            elif len(player_2.all_cards) < 5:
+                print("Player Two unable to play war! Game Over at War")
+                print("Player One Wins! Player One Loses!")
+                game_on = False
+                break
+            else:
+                for num in range(5):
+                    player_1_cards.append(player_1.remove_cards())
+                    player_2_cards.append(player_2.remove_cards())
 
-if len(player_1.all_cards) == 0:
-    print("player 2 won")
-    print(len(player_2.all_cards))
-    print(len(player_1.all_cards))
-else:
-    print("player 1 won")
-    print(len(player_2.all_cards))
-    print(len(player_1.all_cards))
-    
 
 
 
