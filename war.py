@@ -63,13 +63,44 @@ class Player:
 
     def __str__(self):
         return f"Player {self.name} has {len(self.all_cards)} cards."
-    
-player_1 = Player("player 1")
-player_2 = Player("player 2")
+
 deck = Deck()
+player_1 = Player("player 1")
+player_2 = Player("Player 2")
 
 def tie():
-    pass
+    """ This cards resolves the tie
+    in case both players have the 
+    same card value"""
+    if len(player_1.all_cards) < 3:
+        return "player 2", player_2.all_cards
+    
+    if len(player_2.all_cards) < 3:
+        return "player 1", player_1.all_cards
+
+    player_1_hand = [player_1.remove_cards() for i in range(3)]
+    player_2_hand = [player_2.remove_cards() for i in range(3)]
+    values_player_1_hand = [card.value for card in player_1_hand]
+    values_player_2_hand = [card.value for card in player_2_hand]
+
+    while max(values_player_1_hand) == max(values_player_2_hand):
+        if len(player_1.all_cards) < 3:
+            return "player 2", player_1.all_cards + player_1_hand + player_2_hand
+        if len(player_2.all_cards) < 3:
+            return "player 1", player_2.all_cards + player_1_hand + player_2_hand
+
+        new_hand_1 = [player_1.remove_cards() for i in range(3)]
+        new_hand_2 = [player_2.remove_cards() for i in range(3)]
+        player_1_hand.extend(new_hand_1)
+        player_2_hand.extend(new_hand_2)
+        values_player_1_hand = [card.value for card in new_hand_1]
+        values_player_2_hand = [card.value for card in new_hand_2]
+
+    if max(values_player_1_hand) > max(values_player_2_hand):
+        return "player 1", player_1_hand + player_2_hand
+    else:
+        return "player 2", player_1_hand + player_2_hand
+ 
 
 def play():
     """This function should take a card of each player, and compare them,
@@ -82,25 +113,40 @@ def play():
     card_2 = player_2.remove_cards()
 
     if card_1.value == card_2.value:
-        tie()
+        winner, cards = tie()
+        if winner == "player 1":
+            player_1.add_cards(cards)
+            player_1.add_cards([card_1,card_2])
+        else:
+            player_2.add_cards(cards)
+            player_2.add_cards([card_1,card_2])
     elif card_1.value > card_2.value:
-        player_1.add_cards(card_1)
-        player_1.add_cards(card_1)
+        player_1.add_cards([card_1,card_2])
     else:
-        player_2.add_cards(card_1)
-        player_2.add_cards(card_2)
+        player_2.add_cards([card_1,card_2])
 
 def start_game():
     """Once created a deck, this func shuffles it,
     and distributes it between both players"""
-
     deck.shuffle()
     for i in range(len(deck.all_cards) // 2):
             player_1.add_cards(deck.card())
             player_2.add_cards(deck.card())
     
+
+start_game()
+while len(player_1.all_cards) != 0 and len(player_2.all_cards) != 0:
+    play()
+
+if len(player_1.all_cards) == 0:
+    print("player 2 won")
+    print(len(player_2.all_cards))
+    print(len(player_1.all_cards))
+else:
+    print("player 1 won")
+    print(len(player_2.all_cards))
+    print(len(player_1.all_cards))
     
-    
 
 
 
@@ -110,12 +156,6 @@ def start_game():
 
 
 
-'''Como lo estoy entendiendo por ahora,
-es que una forma de hacerlo (seguro que hay más)
-es creando los diferentes objetos y luego usar los
-objetos y sus métodos dentro de funciones del script
-probarlo la próxima vez que siga con esto'''
-    
 
 
     
