@@ -71,9 +71,10 @@ class Deck:
     def __init__(self):
         """Creates a complete deck using cards class"""
         self.all_cards = []
-        for suit in suits:
-            for rank in ranks:
-                self.all_cards.append(Cards(suit,rank))
+        for i in range(8):
+            for suit in suits:
+                for rank in ranks:
+                    self.all_cards.append(Cards(suit,rank))
     
     def shuffle(self):
         """Once created a deck, it allows you to shuffle it, you can change order"""
@@ -82,20 +83,36 @@ class Deck:
     def deal_one(self):
         """Once created a deck, it allows you to take a card out
         and it's eliminated from deck"""
-        return self.all_cards.pop()
-    
-    def restart(self):
-        """Once created a deck and finished using it, allows you
-        to restore all the deck"""
-        self.__init__() 
+        return self.all_cards.pop(0)
+
+class Hand:
+    """This class is going to represent
+    the hand of either dealer or player"""
+    def __init__(self):
+        self.hand_cards = [] # Empty list that will be completed each round
+        self.hand_cards_values = [] # Empty list that will be completed each round
+        self.sum_values = 0
+
+    def add_card(self,new_card): # Adds a card either when distributing cards at the start or at hit
+        self.hand_cards.append(new_card)
+        self.hand_cards_values.append(new_card.value)
+        self.sum_values = sum(self.hand_cards_values)
+
+    def reset_hand(self):
+        self.hand_cards, self.hand_cards_values, self.sum_values = [], [], 0
+
+class Croupier:
+    pass # I think its better to diferentiate between player and croupier
+
 
 class Player:
-    # Include an attribute for money amount
     """This class is going to represent a player"""
-    def __init__(self,name):
+    def __init__(self,name,money,hand):
         self.name = name
         self.all_cards = []
-    
+        self.money = money
+        self.hand = hand
+
     def remove_one(self):
         """Allows to show, compare and eliminate a player card"""
         return self.all_cards.pop(0)
@@ -106,19 +123,19 @@ class Player:
             self.all_cards.extend(new_cards)
         else:
             self.all_cards.append(new_cards)
-
-    def restart(self):
-        "Resets player cards"
-        self.all_cards = []
-
     def __str__(self):
         return f"Player {self.name} has {len(self.all_cards)} cards."
-    
-class Hand():
+
+class Hand:
     pass
 # debe tener funciones como hit, stand, double, secure y split
 
-class Bet():
+class Bet:
     pass 
 # Pensarlo bien pero es una clase para la apuesta del jugador
 # Ver si es necesaria realmente o no
+ 
+
+
+    
+
