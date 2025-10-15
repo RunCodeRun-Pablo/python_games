@@ -98,42 +98,70 @@ class Hand:
         self.hand_cards_values.append(new_card.value)
         self.sum_values = sum(self.hand_cards_values)
 
-    def reset_hand(self):
+    def reset_hand(self): # Resets the hand after each round
         self.hand_cards, self.hand_cards_values, self.sum_values = [], [], 0
+
+class Bet:
+    """This class defines the money a player bets
+    each round and will be modified by diferent
+    player methods"""
+    def __init__(self,value):
+        self.value = value
+
+    def add_m(self,money):
+        self.value = self.value + money
+
+    def __str__(self):
+        return f"Your bet is {self.value}"
+    
+    def reset(self):
+        self.value = 0
+        
 
 class Croupier:
     pass # I think its better to diferentiate between player and croupier
 
 
 class Player:
-    """This class is going to represent a player"""
-    def __init__(self,name,money,hand):
+    """This class is going to represent a player, it should be able
+    of hitting, stand, double, secure or split, initial ammount of money
+    will be asked for the player when starts from a list."""
+    def __init__(self,name,account):
         self.name = name
-        self.all_cards = []
-        self.money = money
-        self.hand = hand
+        self.account = account
 
-    def remove_one(self):
-        """Allows to show, compare and eliminate a player card"""
-        return self.all_cards.pop(0)
+    def p_hand(self): # Establish a hand attribute for the player
+        self.hand = Hand()
     
-    def add_cards(self,new_cards):
-        """Allows to take cards when a player wins a round"""
-        if type(new_cards) == type([]):
-            self.all_cards.extend(new_cards)
+    def p_bet(self,money): # Establish a bet attribute for the player if it has enough money
+        if money <= self.account:
+            self.bet = Bet(money)
+            self.account = self.account - money
         else:
-            self.all_cards.append(new_cards)
-    def __str__(self):
-        return f"Player {self.name} has {len(self.all_cards)} cards."
+            print("Not enough money for this bet")
+    
+    def p_income(self): #Adds money to the player account
+        pass
 
-class Hand:
-    pass
+    def hit(self): # Adds more cards to player hand
+        pass
+
+    def duplicate(self): # Duplicates bet
+        pass
+
+    def secure(self): # Adds a secure to bet
+        pass
+
+    def split(self): # Splits initial bet into two bets, a list of bets for example
+        pass
+    
+    
+        
+
+
+
 # debe tener funciones como hit, stand, double, secure y split
 
-class Bet:
-    pass 
-# Pensarlo bien pero es una clase para la apuesta del jugador
-# Ver si es necesaria realmente o no
  
 
 
