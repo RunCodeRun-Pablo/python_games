@@ -108,13 +108,13 @@ class Bet:
     def __init__(self,value):
         self.value = value
 
-    def add_m(self,money):
+    def add_m(self,money): # To add more money to the bet if possible
         self.value = self.value + money
 
     def __str__(self):
         return f"Your bet is {self.value}"
     
-    def reset(self):
+    def reset(self): # Resets the bet, although maybe its not necessary
         self.value = 0
         
 
@@ -141,10 +141,15 @@ class Player:
             print("Not enough money for this bet")
     
     def p_income(self): #Adds money to the player account
-        pass
+        try:
+            self.account = self.bet.value + self.account
+            print(f"You won {self.bet.value} $")
+            self.bet = 0
+        except AttributeError:
+            return f"{self.name} has no bet"
 
     def hit(self): # Adds more cards to player hand
-        pass
+        
 
     def duplicate(self): # Duplicates bet
         pass
