@@ -127,8 +127,8 @@ class Player:
     of hitting, stand, double, secure or split, initial ammount of money
     will be asked for the player when starts from a list."""
     def __init__(self,name,account):
-        self.name = name
-        self.account = account
+        self.name = str(name)
+        self.account = int(account)
 
     def p_hand(self): # Establish a hand attribute for the player
         self.hand = Hand()
@@ -139,7 +139,7 @@ class Player:
             self.account = self.account - money
         else:
             print("Not enough money for this bet")
-    
+        
     def p_income(self): #Adds money to the player account
         try:
             self.account = self.bet.value + self.account
@@ -148,11 +148,11 @@ class Player:
         except AttributeError:
             return f"{self.name} has no bet"
 
-    def hit(self): # Adds more cards to player hand
-        
-
     def duplicate(self): # Duplicates bet
-        pass
+        try:
+            self.bet.value = self.bet.value*2
+        except AttributeError:
+            return f"{self.name} has no bet"
 
     def secure(self): # Adds a secure to bet
         pass
@@ -160,12 +160,18 @@ class Player:
     def split(self): # Splits initial bet into two bets, a list of bets for example
         pass
     
+deck = Deck()
+deck.shuffle()
+player = Player("Pablo",1000)
+
+
+
+
     
-        
 
 
 
-# debe tener funciones como hit, stand, double, secure y split
+
 
  
 
