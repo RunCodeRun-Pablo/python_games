@@ -134,15 +134,18 @@ class Player:
         self.hand = Hand()
     
     def p_bet(self,money): # Establish a bet attribute for the player if it has enough money
+
         if money <= self.account:
             self.bet = Bet(money)
             self.account = self.account - money
+            print(f"You bet {self.bet.value}$, cash in account: {self.account}$")
         else:
             print("Not enough money for this bet")
         
     def p_income(self): #Adds money to the player account
         try:
-            self.account = self.bet.value + self.account
+            self.account = self.bet.value + self.bet.secure
+            + self.account
             print(f"You won {self.bet.value} $")
             self.bet = 0
         except AttributeError:
@@ -155,8 +158,9 @@ class Player:
             return f"{self.name} has no bet"
 
     def secure(self): # Adds a secure to bet
-        pass
-
+        print(f"Your actual bet is {self.bet.value}$ plus {self.bet.value/2}$ secure")
+        self.bet.value = self.bet.value + (self.bet.value / 2)
+        
     def split(self): # Splits initial bet into two bets, a list of bets for example
         pass
     
@@ -164,10 +168,6 @@ deck = Deck()
 deck.shuffle()
 player = Player("Pablo",1000)
 
-
-
-
-    
 
 
 
