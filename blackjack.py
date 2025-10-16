@@ -112,7 +112,7 @@ class Bet:
         self.value = self.value + money
 
     def __str__(self):
-        return f"Your bet is {self.value}"
+        return f"Your bet is {self.value}€"
     
     def reset(self): # Resets the bet, although maybe its not necessary
         self.value = 0
@@ -146,35 +146,34 @@ class Player:
         try:
             self.account = self.bet.value + self.bet.secure
             + self.account
-            print(f"You won {self.bet.value} $")
+            print(f"You won {self.bet.value}€")
             self.bet = 0
         except AttributeError:
             return f"{self.name} has no bet"
 
     def duplicate(self): # Duplicates bet
         try:
+            self.account = self.account-self.bet.value    
             self.bet.value = self.bet.value*2
+            print("You have duplicated your bet,\n" \
+            f"actual bet: {self.bet.value}€\n" \
+            f"cash in account: {self.account}€")
         except AttributeError:
             return f"{self.name} has no bet"
 
     def secure(self): # Adds a secure to bet
-        print(f"Your actual bet is {self.bet.value}$ plus {self.bet.value/2}$ secure")
+        print(f"Your actual bet is {self.bet.value}€ plus {self.bet.value/2}€ secure")
         self.bet.value = self.bet.value + (self.bet.value / 2)
         
     def split(self): # Splits initial bet into two bets, a list of bets for example
-        pass
+        self.account = self.account - self.bet.value
+        self.bet = [self.bet,self.bet]
+        print("You have splitted bets:\n" \
+        f"card 1 bet: {self.bet[0].value}€\n"\
+        f"card 2 bet: {self.bet[1].value}€\n"\
+        f"cash in account: {self.account}€")
+
     
 deck = Deck()
 deck.shuffle()
 player = Player("Pablo",1000)
-
-
-
-
-
-
- 
-
-
-    
-
