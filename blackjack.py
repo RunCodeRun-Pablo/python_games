@@ -119,8 +119,13 @@ class Bet:
         
 
 class Croupier:
-    pass # I think its better to diferentiate between player and croupier
-
+    
+    def __init__():
+        pass
+    def c_hand(): #Defines a hand for the croupier
+        pass
+    def c_income(): #Allows croupier to take money if he wins the round
+        pass
 
 class Player:
     """This class is going to represent a player, it should be able
