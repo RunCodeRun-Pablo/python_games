@@ -120,12 +120,12 @@ class Bet:
 
 class Croupier:
     
-    def __init__():
-        pass
-    def c_hand(): #Defines a hand for the croupier
-        pass
-    def c_income(): #Allows croupier to take money if he wins the round
-        pass
+    def __init__(self,name,account):
+        self.name = name
+        self.account = account
+    def c_hand(self): #Defines a hand for the croupier
+        self.hand = Hand()
+       
 
 class Player:
     """This class is going to represent a player, it should be able
