@@ -120,9 +120,8 @@ class Bet:
 
 class Croupier:
     
-    def __init__(self,name,account):
+    def __init__(self,name):
         self.name = name
-        self.account = account
     def c_hand(self): #Defines a hand for the croupier
         self.hand = Hand()
        
@@ -181,4 +180,19 @@ class Player:
     
 deck = Deck()
 deck.shuffle()
-player = Player("Pablo",1000)
+croupier = Croupier("Croupier")
+
+initiate = True
+start_game = input("Initiate blackjack game?(y/n): ")
+
+while initiate:
+        if start_game == "y":
+            print("Game initiated")
+            initiate = False
+        elif start_game == "n":
+            print("See you next time!")
+            initiate = False
+        else:
+            start_game = input("Invalid answer, please select y or n: ")
+
+
