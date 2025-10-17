@@ -177,7 +177,9 @@ class Player:
         f"card 2 bet: {self.bet[1].value}€\n"\
         f"cash in account: {self.account}€")
 
-    
+def define_player():
+    pass
+
 deck = Deck()
 deck.shuffle()
 croupier = Croupier("Croupier")
@@ -196,7 +198,6 @@ while initiate:
         else:
             start_game = input("Invalid answer, please select y or n: ")
 
-def define_player():
-    pass
+
     
 
