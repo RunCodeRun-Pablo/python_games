@@ -189,10 +189,14 @@ while initiate:
         if start_game == "y":
             print("Game initiated")
             initiate = False
+            define_player()
         elif start_game == "n":
             print("See you next time!")
             initiate = False
         else:
             start_game = input("Invalid answer, please select y or n: ")
 
+def define_player():
+    pass
+    
 
