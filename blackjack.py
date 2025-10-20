@@ -178,7 +178,25 @@ class Player:
         f"cash in account: {self.account}€")
 
 def define_player():
-    pass
+    """Should allow to define player class attribute
+    of user, first introducing a name and then selecting
+    an initial money amount for account among the distinct
+    options"""
+    opt_account = [100,500,1000]
+    player_name = input("Please introduce a player name: ")
+
+    defined_player = False
+    while not defined_player:
+        try:
+            player_account = int(input("Please select an initial money account: \n [100] [500] [1000] \n"))
+            defined_player = True
+        except ValueError:
+            continue
+
+    while player_account not in opt_account:
+        player_account = int(input("Please enter a valid money amount: \n [100] [500] [1000] \n"))
+    return player_name, player_account
+
 
 deck = Deck()
 deck.shuffle()
@@ -188,16 +206,18 @@ initiate = True
 start_game = input("Initiate blackjack game?(y/n): ")
 
 while initiate:
-        if start_game == "y":
-            print("Game initiated")
-            initiate = False
-            define_player()
-        elif start_game == "n":
-            print("See you next time!")
-            initiate = False
-        else:
-            start_game = input("Invalid answer, please select y or n: ")
+    if start_game == "y":
+        print("Game initiated")
+        initiate = False
+        name,account = define_player()
+        player = Player(name,account)
+    elif start_game == "n":
+        print("See you next time!")
+        initiate = False
+    else:
+        start_game = input("Invalid answer, please select y or n: ")
 
 
-    
+print(player.name)
+print(player.account)    
 
