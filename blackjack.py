@@ -197,6 +197,9 @@ def define_player():
         player_account = int(input("Please enter a valid money amount: \n [100] [500] [1000] \n"))
     return player_name, player_account
 
+def card_distr(person):
+    """This makes initial distribution of cards to each player"""
+    pass
 
 deck = Deck()
 deck.shuffle()
@@ -218,6 +221,24 @@ while initiate:
         start_game = input("Invalid answer, please select y or n: ")
 
 
-print(player.name)
-print(player.account)    
+ 
+
+round_answers = {"y": True, "n": False} # Will make easier to transform player answer
+answ = True
+while answ: 
+    print("Round initiated")
+# Another while loop could be added to check win, we'll see
+    # The round starts with card distribution
+
+
+    # After a round finishes player gets asked
+    rnd_answ = input("Want to play another round?(y/n): ")
+    while rnd_answ not in round_answers.keys():
+        rnd_answ = input("Please enter valid answer \nWant to play another round?(y/n): ")
+
+    answ = round_answers[rnd_answ]
+
+print("Thank you for playing!\nCome back soon!")
+
+    
 
