@@ -222,6 +222,16 @@ def card_distr():
     player.hand.add_card(deck.deal_one())
     croupier.hand.add_card(deck.deal_one())
 
+def set_bet():
+    """This function will set the player's bet"""
+    #defined_bet = False
+    #while not defined_bet:
+        #try:
+        #    player_account = int(input("Please select an initial money account: \n [100] [500] [1000] \n"))
+        #    defined_player = True
+        #except ValueError:
+        #    continue
+
 while initiate:
     if start_game == "y":
         print("Game initiated")
@@ -236,12 +246,32 @@ while initiate:
 
 round_answers = {"y": True, "n": False} # Will make easier to transform player answer
 answ = True
+
 while answ: 
     print("Round initiated")
     card_distr() 
-    print(f"Your cards: [{player.hand.hand_cards[0]}][{player.hand.hand_cards[1]}]")
-    print(f"Croupier cards: [{croupier.hand.hand_cards[0]}][{croupier.hand.hand_cards[1]}]")
-    # Another while loop after card_distr() to check for player answer and options
+    print(f"Your cards: [{player.hand.hand_cards[0]}][{player.hand.hand_cards[1]}]\nYour value: [{player.hand.sum_values}]")
+    print(f"Croupier cards: [{croupier.hand.hand_cards[0]}]\nCroupier actual value: [{croupier.hand.hand_cards[0].value}]")
+    
+    # set_bet()
+
+    # if player.hand.sum_values == 21:
+
+
+"""Primero hay que hacer una apuesta y luego
+el orden de chequeo sería el siguiente:
+*en primer lugar si el jugador tiene blackjack ver si el croupier tiene otro o no para
+ver si el jugador gana directamente
+* siguiente chequeo sería si la primera carta del croupier es un ace preguntar si 
+el jugador se asegura o no
+* siguiente chequeo es ver si el jugador tiene dos cartas con el mismo valor y quiere
+ hacer split
+* siguiente chequeo es ver si el jugador quiere duplicar
+*despues simplemente preguntar si el jugador quiere añadir cartas
+Hay que chequear constantemente que el valor de las cartas no sea superior a 21, si no el jugador pierde"""
+
+
+        # while loop after card_distr() to check for player answer and options
     # Another while loop after player play to check for croupier play
 
 
