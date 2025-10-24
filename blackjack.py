@@ -94,9 +94,18 @@ class Hand:
         self.sum_values = 0
 
     def add_card(self,new_card): # Adds a card either when distributing cards at the start or at hit
-        self.hand_cards.append(new_card)
-        self.hand_cards_values.append(new_card.value)
-        self.sum_values = sum(self.hand_cards_values)
+        if type(new_card.value) != list:
+            self.hand_cards.append(new_card)
+            self.hand_cards_values.append(new_card.value)
+            self.sum_values = sum(self.hand_cards_values)
+        else:
+            self.hand_cards.append(new_card)
+            if self.sum_values > 10:
+                self.hand_cards_values.append(new_card.value[0])
+                self.sum_values = sum(self.hand_cards_values)
+            elif self.sum_values <= 10:
+                self.hand_cards_values.append(new_card.value[1])
+                self.sum_values = sum(self.hand_cards_values)     
 
     def reset_hand(self): # Resets the hand after each round
         self.hand_cards, self.hand_cards_values, self.sum_values = [], [], 0
@@ -177,6 +186,13 @@ class Player:
         f"card 2 bet: {self.bet[1].value}€\n"\
         f"cash in account: {self.account}€")
 
+deck = Deck()
+deck.shuffle()
+croupier = Croupier("Croupier")
+
+initiate = True
+start_game = input("Initiate blackjack game?(y/n): ")
+
 def define_player():
     """Should allow to define player class attribute
     of user, first introducing a name and then selecting
@@ -197,16 +213,14 @@ def define_player():
         player_account = int(input("Please enter a valid money amount: \n [100] [500] [1000] \n"))
     return player_name, player_account
 
-def card_distr(person):
+def card_distr():
     """This makes initial distribution of cards to each player"""
-    pass
-
-deck = Deck()
-deck.shuffle()
-croupier = Croupier("Croupier")
-
-initiate = True
-start_game = input("Initiate blackjack game?(y/n): ")
+    player.p_hand()
+    croupier.c_hand()
+    player.hand.add_card(deck.deal_one())
+    croupier.hand.add_card(deck.deal_one())
+    player.hand.add_card(deck.deal_one())
+    croupier.hand.add_card(deck.deal_one())
 
 while initiate:
     if start_game == "y":
@@ -220,15 +234,20 @@ while initiate:
     else:
         start_game = input("Invalid answer, please select y or n: ")
 
-
- 
-
 round_answers = {"y": True, "n": False} # Will make easier to transform player answer
 answ = True
 while answ: 
     print("Round initiated")
-# Another while loop could be added to check win, we'll see
-    # The round starts with card distribution
+    card_distr() 
+    print(f"Your cards: [{player.hand.hand_cards[0]}][{player.hand.hand_cards[1]}]")
+    print(f"Croupier cards: [{croupier.hand.hand_cards[0]}][{croupier.hand.hand_cards[1]}]")
+    # Another while loop after card_distr() to check for player answer and options
+    # Another while loop after player play to check for croupier play
+
+
+
+
+
 
 
     # After a round finishes player gets asked
