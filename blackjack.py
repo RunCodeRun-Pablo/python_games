@@ -147,13 +147,15 @@ class Player:
         self.hand = Hand()
     
     def p_bet(self,money): # Establish a bet attribute for the player if it has enough money
-
+        
         if money <= self.account:
             self.bet = Bet(money)
             self.account = self.account - money
             print(f"You bet {self.bet.value}$, cash in account: {self.account}$")
+            return True
         else:
             print("Not enough money for this bet")
+            return False
         
     def p_income(self): #Adds money to the player account
         try:
@@ -224,13 +226,18 @@ def card_distr():
 
 def set_bet():
     """This function will set the player's bet"""
-    #defined_bet = False
-    #while not defined_bet:
-        #try:
-        #    player_account = int(input("Please select an initial money account: \n [100] [500] [1000] \n"))
-        #    defined_player = True
-        #except ValueError:
-        #    continue
+    bet_set = True
+    while bet_set:
+        try:
+            player_bet = int(input("Please enter a bet for this round: "))
+            if player_bet > 0:
+                bet_set = False
+                return player_bet
+            else:
+                print("A valid bet should be entered")
+        except ValueError:
+            continue
+    
 
 while initiate:
     if start_game == "y":
@@ -253,22 +260,30 @@ while answ:
     print(f"Your cards: [{player.hand.hand_cards[0]}][{player.hand.hand_cards[1]}]\nYour value: [{player.hand.sum_values}]")
     print(f"Croupier cards: [{croupier.hand.hand_cards[0]}]\nCroupier actual value: [{croupier.hand.hand_cards[0].value}]")
     
-    # set_bet()
 
+    if player.account > 0:
+        bet_success = player.p_bet(set_bet())
+        while not bet_success:
+            bet_success = player.p_bet(set_bet())
+    else:
+        answ = False
+        print("You lost all your money!")
+        break
+    
     # if player.hand.sum_values == 21:
 
 
-"""Primero hay que hacer una apuesta y luego
-el orden de chequeo sería el siguiente:
-*en primer lugar si el jugador tiene blackjack ver si el croupier tiene otro o no para
-ver si el jugador gana directamente
-* siguiente chequeo sería si la primera carta del croupier es un ace preguntar si 
-el jugador se asegura o no
-* siguiente chequeo es ver si el jugador tiene dos cartas con el mismo valor y quiere
- hacer split
-* siguiente chequeo es ver si el jugador quiere duplicar
-*despues simplemente preguntar si el jugador quiere añadir cartas
-Hay que chequear constantemente que el valor de las cartas no sea superior a 21, si no el jugador pierde"""
+    """Primero hay que hacer una apuesta y luego
+    el orden de chequeo sería el siguiente:
+    *en primer lugar si el jugador tiene blackjack ver si el croupier tiene otro o no para
+    ver si el jugador gana directamente
+    * siguiente chequeo sería si la primera carta del croupier es un ace preguntar si 
+    el jugador se asegura o no
+    * siguiente chequeo es ver si el jugador tiene dos cartas con el mismo valor y quiere
+    hacer split
+    * siguiente chequeo es ver si el jugador quiere duplicar
+    *despues simplemente preguntar si el jugador quiere añadir cartas
+    Hay que chequear constantemente que el valor de las cartas no sea superior a 21, si no el jugador pierde"""
 
 
         # while loop after card_distr() to check for player answer and options
@@ -278,7 +293,7 @@ Hay que chequear constantemente que el valor de las cartas no sea superior a 21,
 
 
 
-
+    
 
     # After a round finishes player gets asked
     rnd_answ = input("Want to play another round?(y/n): ")
@@ -289,5 +304,4 @@ Hay que chequear constantemente que el valor de las cartas no sea superior a 21,
 
 print("Thank you for playing!\nCome back soon!")
 
-    
 
