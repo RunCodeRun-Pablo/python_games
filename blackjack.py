@@ -159,9 +159,7 @@ class Player:
         
     def p_income(self): #Adds money to the player account
         try:
-            self.account = self.bet.value + self.bet.secure
-            + self.account
-            print(f"You won {self.bet.value}€")
+            self.account = self.bet.value + self.account
             self.bet = 0
         except AttributeError:
             return f"{self.name} has no bet"
@@ -254,12 +252,8 @@ answ = True
 
 while answ: 
     print("Round initiated")
-    card_distr() 
-    print(f"Your cards: [{player.hand.hand_cards[0]}][{player.hand.hand_cards[1]}]\nYour value: [{player.hand.sum_values}]")
-    print(f"Croupier cards: [{croupier.hand.hand_cards[0]}]\nCroupier actual value: [{croupier.hand.hand_cards[0].value}]")
-    
 
-    if player.account > 0:
+    if player.account > 0: # First check, if player has enough money in the account and if the bet can be made
         bet_success = player.p_bet(set_bet())
         while not bet_success:
             bet_success = player.p_bet(set_bet())
@@ -267,8 +261,27 @@ while answ:
         answ = False
         print("You lost all your money!")
         break
+
+    card_distr() 
+    print(f"Your cards: [{player.hand.hand_cards[0]}][{player.hand.hand_cards[1]}]\nYour value: [{player.hand.sum_values}]")
+    print(f"Croupier cards: [{croupier.hand.hand_cards[0]}]")
     
-    # if player.hand.sum_values == 21:
+    
+    if player.hand.sum_values == 21: # Second check, if initial blackjack happens
+        print("BLACKJACK!")
+        if player.hand.sum_values > croupier.hand.sum_values:
+            print(f"Your cards: [{player.hand.hand_cards[0]}][{player.hand.hand_cards[1]}]\nYour value: [{player.hand.sum_values}]")
+            print(f"Croupier cards: [{croupier.hand.hand_cards[0]}][{croupier.hand.hand_cards[1]}]\nCroupier actual value: [{croupier.hand.sum_values}]")
+            print(f"You win this round, total money won: {player.bet.value+player.bet.value*1.5}")
+            player.bet.value += player.bet.value*1.5
+            player.p_income()
+
+        elif player.hand.sum_values == croupier.hand.sum_values:
+            print(f"Your cards: [{player.hand.hand_cards[0]}][{player.hand.hand_cards[1]}]\nYour value: [{player.hand.sum_values}]")
+            print(f"Croupier cards: [{croupier.hand.hand_cards[0]}][{croupier.hand.hand_cards[1]}]\nCroupier actual value: [{croupier.hand.sum_values}]")
+            print(f"It is a tie!, total money won: {player.bet.value}")
+            player.p_income()
+
 
 
     """
