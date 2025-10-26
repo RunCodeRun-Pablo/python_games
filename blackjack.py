@@ -226,12 +226,10 @@ def card_distr():
 
 def set_bet():
     """This function will set the player's bet"""
-    bet_set = True
-    while bet_set:
+    while True:
         try:
             player_bet = int(input("Please enter a bet for this round: "))
             if player_bet > 0:
-                bet_set = False
                 return player_bet
             else:
                 print("A valid bet should be entered")
@@ -273,8 +271,7 @@ while answ:
     # if player.hand.sum_values == 21:
 
 
-    """Primero hay que hacer una apuesta y luego
-    el orden de chequeo sería el siguiente:
+    """
     *en primer lugar si el jugador tiene blackjack ver si el croupier tiene otro o no para
     ver si el jugador gana directamente
     * siguiente chequeo sería si la primera carta del croupier es un ace preguntar si 
