@@ -175,6 +175,7 @@ class Player:
             return f"{self.name} has no bet"
 
     def secure(self): # Adds a secure to bet
+        self.account -= self.bet.value / 2
         print(f"Your actual bet is {self.bet.value}€ plus {self.bet.value/2}€ secure")
         self.bet.value = self.bet.value + (self.bet.value / 2)
         
@@ -282,8 +283,21 @@ while answ:
             print(f"It is a tie!, total money won: {player.bet.value}")
             player.p_income()
 
-    #if croupier.hand.hand_cards[0].ranks == "Ace": # Check if player wants to secure bet
-    #    pass
+    if croupier.hand.hand_cards[0].ranks == "Ace": # Check if player wants to secure bet
+        sec_answ = input("Want to secure your bet?(y/n): ")
+
+        while sec_answ not in round_answers.keys():
+            sec_answ = input("Please introduce a valid response\nDo you want to secure bet?(y/n): ")
+
+        if round_answers[sec_answ] == True: # Remember to later include a check if bet should be lost or not
+            player.secure()
+    
+    
+
+
+
+
+
 
     """
     * siguiente chequeo sería si la primera carta del croupier es un ace preguntar si 
