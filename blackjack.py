@@ -5,13 +5,6 @@ against the crupier, and either player or croupier have distinct rules
 croupier has to ask for cards whenever his score is less than 16, and
 stands if it is 17 or more.
 
-Numeric cards add to each other and figures add 10, except for ace which
-either adds 11 or 1 depending on player selection. For the croupier aces
-score 11 if the result does not surpass 21, and 1 in the other case.
-
-Best play is achieving a 21 score with only two cards, termed as blackjack,
-which is even better than scoring 21 with more than 2 cards
-
 Game starts with croupier giving two cards to each player, if the player directly
 obtains a blackjack he wins the round unless croupier also has a blackjack.
 The croupier also has two cards in the table. Cards are distributed using
@@ -117,8 +110,8 @@ class Bet:
     def __init__(self,value):
         self.value = value
 
-    def add_m(self,money): # To add more money to the bet if possible
-        self.value = self.value + money
+    def bet_secure(self): # To establish a secure for bet
+        self.secure = self.value / 2
 
     def __str__(self):
         return f"Your bet is {self.value}€"
@@ -176,6 +169,7 @@ class Player:
 
     def secure(self): # Adds a secure to bet
         self.account -= self.bet.value / 2
+        self.bet.
         print(f"Your actual bet is {self.bet.value}€ plus {self.bet.value/2}€ secure")
         self.bet.value = self.bet.value + (self.bet.value / 2)
         
@@ -283,7 +277,9 @@ while answ:
             print(f"It is a tie!, total money won: {player.bet.value}")
             player.p_income()
 
-    if croupier.hand.hand_cards[0].ranks == "Ace": # Check if player wants to secure bet
+    
+
+    if croupier.hand.hand_cards[0].ranks == "Ace" and player.account >= player.bet.value/2: # Check if player wants to secure bet
         sec_answ = input("Want to secure your bet?(y/n): ")
 
         while sec_answ not in round_answers.keys():
@@ -292,7 +288,7 @@ while answ:
         if round_answers[sec_answ] == True: # Remember to later include a check if bet should be lost or not
             player.secure()
     
-    
+
 
 
 
@@ -303,8 +299,8 @@ while answ:
     * siguiente chequeo sería si la primera carta del croupier es un ace preguntar si 
     el jugador se asegura o no
     * siguiente chequeo es ver si el jugador tiene dos cartas con el mismo valor y quiere
-    hacer split
-    * siguiente chequeo es ver si el jugador quiere duplicar
+    hacer split, si el jugador splitea no puede duplicar pero si puede tener seguro
+    * siguiente chequeo es ver si el jugador quiere duplicar, puede tener seguro pero no splitear
     *despues simplemente preguntar si el jugador quiere añadir cartas
     Hay que chequear constantemente que el valor de las cartas no sea superior a 21, si no el jugador pierde"""
 
@@ -327,4 +323,8 @@ while answ:
 
 print("Thank you for playing!\nCome back soon!")
 
+
+player = Player("Pablo",100)
+
+player.p_bet(50)
 
