@@ -282,11 +282,10 @@ while answ:
             print(f"It is a tie!, total money won: {player.bet.value}")
             player.p_income()
 
-
+    #if croupier.hand.hand_cards[0].ranks == "Ace": # Check if player wants to secure bet
+    #    pass
 
     """
-    *en primer lugar si el jugador tiene blackjack ver si el croupier tiene otro o no para
-    ver si el jugador gana directamente
     * siguiente chequeo sería si la primera carta del croupier es un ace preguntar si 
     el jugador se asegura o no
     * siguiente chequeo es ver si el jugador tiene dos cartas con el mismo valor y quiere
