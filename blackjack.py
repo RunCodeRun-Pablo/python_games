@@ -175,6 +175,10 @@ class Player:
     def split(self): # Splits initial bet into two bets, a list of bets for example
         self.account = self.account - self.bet.value
         self.bet = [self.bet,self.bet]
+        hand1,hand2 = Hand(),Hand()
+        hand1.add_card(self.hand.hand_cards[0])
+        hand2.add_card(self.hand.hand_cards[1])
+        self.hand = [hand1,hand2]
         print("You have splitted bets:\n" \
         f"card 1 bet: {self.bet[0].value}€\n"\
         f"card 2 bet: {self.bet[1].value}€\n"\
@@ -282,7 +286,7 @@ while answ:
         while sec_answ not in round_answers.keys():
             sec_answ = input("Please introduce a valid response\nDo you want to secure bet?(y/n): ")
 
-        if round_answers[sec_answ] == True: # Remember to later include a check if bet should be lost or not
+        if round_answers[sec_answ] == True: # Remember to later include a check if secure should be lost or not
             player.secure()
 
     if (player.hand.hand_cards_values[0] == player.hand.hand_cards_values[1] or player.hand.hand_cards_values[1] == 1) and player.account >= player.bet.value: # Check if player has two equal cards and wants to split
@@ -331,7 +335,7 @@ print("Thank you for playing!\nCome back soon!")
 
 # This is just for proofs
 card1 = Cards("Diamonds","Ace")
-card2 = Cards("Diamonds","Ace")
+card2 = Cards("Spades","Ace")
 
 player = Player("Pablo", 500)
 player.p_bet(125)
