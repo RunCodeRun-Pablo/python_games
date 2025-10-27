@@ -292,7 +292,7 @@ while answ:
             spl_answ = input("Please introduce a valid response\n Do you want to split your bet?(y/n): ")
         
         if round_answers[spl_answ] == True:
-            player.split()
+            player.split() # Depending on if split or not two pathways can be followed
 
 
     
@@ -329,6 +329,7 @@ while answ:
 
 print("Thank you for playing!\nCome back soon!")
 
+# This is just for proofs
 card1 = Cards("Diamonds","Ace")
 card2 = Cards("Diamonds","Ace")
 
@@ -347,6 +348,6 @@ if (player.hand.hand_cards_values[0] == player.hand.hand_cards_values[1] or play
             spl_answ = input("Please introduce a valid response\nDo you want to split your bet?(y/n): ")
         
         if round_answers[spl_answ] == True:
-            player.split() #Depending on if split or not two pathways can be followed
+            player.split() 
 else:
     print("NOT ENOUGH MONEY")
