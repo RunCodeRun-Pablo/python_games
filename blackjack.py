@@ -168,10 +168,9 @@ class Player:
             return f"{self.name} has no bet"
 
     def secure(self): # Adds a secure to bet
-        self.account -= self.bet.value / 2
-        self.bet.
+        self.bet.bet_secure()
+        self.account -= self.bet.secure
         print(f"Your actual bet is {self.bet.value}€ plus {self.bet.value/2}€ secure")
-        self.bet.value = self.bet.value + (self.bet.value / 2)
         
     def split(self): # Splits initial bet into two bets, a list of bets for example
         self.account = self.account - self.bet.value
