@@ -170,7 +170,7 @@ class Player:
     def secure(self): # Adds a secure to bet
         self.bet.bet_secure()
         self.account -= self.bet.secure
-        print(f"Your actual bet is {self.bet.value}€ plus {self.bet.value/2}€ secure")
+        print(f"Your actual bet is {self.bet.value}€ plus {self.bet.secure}€ secure")
         
     def split(self): # Splits initial bet into two bets, a list of bets for example
         self.account = self.account - self.bet.value
@@ -276,8 +276,6 @@ while answ:
             print(f"It is a tie!, total money won: {player.bet.value}")
             player.p_income()
 
-    
-
     if croupier.hand.hand_cards[0].ranks == "Ace" and player.account >= player.bet.value/2: # Check if player wants to secure bet
         sec_answ = input("Want to secure your bet?(y/n): ")
 
@@ -286,6 +284,17 @@ while answ:
 
         if round_answers[sec_answ] == True: # Remember to later include a check if bet should be lost or not
             player.secure()
+
+    if (player.hand.hand_cards_values[0] == player.hand.hand_cards_values[1] or player.hand.hand_cards_values[1] == 1) and player.account >= player.bet.value: # Check if player has two equal cards and wants to split
+        spl_answ = input("Want to split your bet?(y/n): ")
+
+        while spl_answ not in round_answers.keys():
+            spl_answ = input("Please introduce a valid response\n Do you want to split your bet?(y/n): ")
+        
+        if round_answers[spl_answ] == True:
+            player.split()
+
+
     
 
 
@@ -295,8 +304,6 @@ while answ:
 
 
     """
-    * siguiente chequeo sería si la primera carta del croupier es un ace preguntar si 
-    el jugador se asegura o no
     * siguiente chequeo es ver si el jugador tiene dos cartas con el mismo valor y quiere
     hacer split, si el jugador splitea no puede duplicar pero si puede tener seguro
     * siguiente chequeo es ver si el jugador quiere duplicar, puede tener seguro pero no splitear
@@ -322,8 +329,24 @@ while answ:
 
 print("Thank you for playing!\nCome back soon!")
 
+card1 = Cards("Diamonds","Ace")
+card2 = Cards("Diamonds","Ace")
 
-player = Player("Pablo",100)
+player = Player("Pablo", 500)
+player.p_bet(125)
+player.p_hand()
 
-player.p_bet(50)
+player.hand.add_card(card1)
+player.hand.add_card(card2)
 
+
+if (player.hand.hand_cards_values[0] == player.hand.hand_cards_values[1] or player.hand.hand_cards_values[1] == 1) and player.account >= player.bet.value: # Check if player has two equal cards and wants to split
+        spl_answ = input("Want to split your bet?(y/n): ")
+
+        while spl_answ not in round_answers.keys():
+            spl_answ = input("Please introduce a valid response\nDo you want to split your bet?(y/n): ")
+        
+        if round_answers[spl_answ] == True:
+            player.split() #Depending on if split or not two pathways can be followed
+else:
+    print("NOT ENOUGH MONEY")
