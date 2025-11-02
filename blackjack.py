@@ -232,9 +232,45 @@ def set_bet():
         except ValueError:
             continue
 
-def play_round():
-    pass
+def play_round(p_hand,c_hand):
+    """This function is going to check if more cards
+    are added to the hand and then add cards to the 
+    croupier hand and return values of each hand to be
+    compared in comp_values()"""
+
+    answ = ['y','n']
+
+    if 'dup_answ' in globals():
+        if dup_answ == "y":
+            morecards = input("You duplicated and can add only one more card\nWant to add an additional card?(y/n): ")
+            while morecards not in answ:
+                morecards = input("Invalid answer\nWant to add an additional card?(y/n): ")
+            if morecards == 'y':
+                p_hand.add_card(deck.deal_one())            
+    else:
+        while p_hand.sum_values < 21:
+            morecards = input("Want to add an additional card?(y/n): ")
+            while morecards not in answ:
+                morecards = input("Invalid answer\nWant to add additional card?(y/n): ")
+            if morecards == 'y':
+                p_hand.add_card(deck.deal_one())
     
+    while c_hand.sum_values <= 17:
+        c_hand.add_card(deck.deal_one())
+    
+    
+    return p_hand.sum_values,c_hand.sum_values
+
+def comp_values(p_value, c_value):
+    """This function is going to compare values of both
+    hands and determine if player wins or not and return
+    either True or False which will be passed to ret_money()"""
+    pass
+
+def ret_money(player_win):
+    """This function is going to return the money of the bet
+    and the secure to the player depending on the input"""
+    pass
 
 while initiate:
     if start_game == "y":
@@ -354,7 +390,7 @@ while answ:
 
 print("Thank you for playing!\nCome back soon!")
 
-"""# This is just for proofs
+# This is just for proofs
 card1 = Cards("Diamonds","Ace")
 card2 = Cards("Spades","Ace")
 
@@ -364,7 +400,7 @@ player.p_hand()
 
 
 player.hand.add_card(card1)
-player.hand.add_card(card2)"""
+player.hand.add_card(card2)
 
 
 
