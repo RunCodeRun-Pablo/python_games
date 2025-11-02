@@ -364,7 +364,7 @@ while answ:
             player.secure()
 
     
-    if (player.hand.hand_cards_values[0] == player.hand.hand_cards_values[1] or player.hand.hand_cards_values[1] == 1) and player.account >= player.bet.value: # Check if player has two equal cards and wants to split
+    if (player.hand.hand_cards[0].ranks == player.hand.hand_cards[1].ranks or player.hand.hand_cards_values[1] == 1) and player.account >= player.bet.value: # Check if player has two equal cards and wants to split
         spl_answ = input("Want to split your bet?(y/n): ")
 
         while spl_answ not in round_answers.keys():
