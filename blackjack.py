@@ -247,21 +247,21 @@ def play_round(p_hand,c_hand):
                 morecards = input("Invalid answer\nWant to add an additional card?(y/n): ")
             if morecards == 'y':
                 p_hand.add_card(deck.deal_one())            
-    else:
-        cycle = True
-        while cycle:
-            if p_hand.sum_values < 21:
-                morecards = input("Want to add an additional card?(y/n): ")
-                while morecards not in answ:
-                    morecards = input("Invalid answer\nWant to add additional card?(y/n): ")
-                if morecards == 'y':
-                    p_hand.add_card(deck.deal_one())
-                    print(f"New card added: {p_hand.hand_cards[-1]}")
-                    print(f"Actual player hand value: {p_hand.sum_values}")
-                elif morecards == 'n':
+        else:
+            cycle = True
+            while cycle:
+                if p_hand.sum_values < 21:
+                    morecards = input("Want to add an additional card?(y/n): ")
+                    while morecards not in answ:
+                        morecards = input("Invalid answer\nWant to add additional card?(y/n): ")
+                    if morecards == 'y':
+                        p_hand.add_card(deck.deal_one())
+                        print(f"New card added: {p_hand.hand_cards[-1]}")
+                        print(f"Actual player hand value: {p_hand.sum_values}")
+                    elif morecards == 'n':
+                        cycle = False
+                else:
                     cycle = False
-            else:
-                cycle = False
 
     while c_hand.sum_values < 17:
         c_hand.add_card(deck.deal_one())
@@ -274,7 +274,7 @@ def play_round(p_hand,c_hand):
     print("Croupier cards:")
     for c_card in c_hand.hand_cards:
         print(c_card)
-    print(f"Croupier values {c_hand.sum_values}")
+    print(f"Croupier value: {c_hand.sum_values}")
 
     return p_hand.sum_values,c_hand.sum_values
 
@@ -383,23 +383,22 @@ while answ:
         retmoney = comp_values(p_sum, c_sum)
         ret_money(retmoney)
 
-    if 'spl_answ' not in globals() or ('spl_answ' in globals() and round_answers[spl_answ] != True):
-        if player.account >= player.bet.value:
-            dup_answ = input("Do you want to duplicate your bet?(y/n): ")
+    if ('spl_answ' not in globals() or ('spl_answ' in globals() and round_answers[spl_answ] != True)) and player.account >= player.bet.value:
+        dup_answ = input("Do you want to duplicate your bet?(y/n): ")
 
-            while dup_answ not in round_answers.keys():
-                dup_answ = input("Please introduce a valid response\nDo you want to duplicate your bet?(y/n): ")
+        while dup_answ not in round_answers.keys():
+            dup_answ = input("Please introduce a valid response\nDo you want to duplicate your bet?(y/n): ")
             
-            if round_answers[dup_answ] == True:
-                player.duplicate()
-                p_sum, c_sum = play_round(player.hand,croupier.hand)
-                retmoney = comp_values(p_sum, c_sum)
-                ret_money(retmoney)
-        else:
+        if round_answers[dup_answ] == True:
+            player.duplicate()
             p_sum, c_sum = play_round(player.hand,croupier.hand)
             retmoney = comp_values(p_sum, c_sum)
             ret_money(retmoney)
-            
+        elif round_answers[dup_answ] != True:
+            p_sum, c_sum = play_round(player.hand,croupier.hand)
+            retmoney = comp_values(p_sum, c_sum)
+            ret_money(retmoney)
+                
 
 
 
