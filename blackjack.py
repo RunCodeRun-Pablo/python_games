@@ -262,7 +262,22 @@ def play_round(p_hand,c_hand):
                         cycle = False
                 else:
                     cycle = False
-
+    else:
+        cycle = True
+        while cycle:
+            if p_hand.sum_values < 21:
+                morecards = input("Want to add an additional card?(y/n): ")
+                while morecards not in answ:
+                    morecards = input("Invalid answer\nWant to add additional card?(y/n): ")
+                if morecards == 'y':
+                    p_hand.add_card(deck.deal_one())
+                    print(f"New card added: {p_hand.hand_cards[-1]}")
+                    print(f"Actual player hand value: {p_hand.sum_values}")
+                elif morecards == 'n':
+                    cycle = False
+            else:
+                cycle = False
+                
     while c_hand.sum_values < 17:
         c_hand.add_card(deck.deal_one())
 
