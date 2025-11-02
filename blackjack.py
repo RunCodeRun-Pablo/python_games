@@ -384,16 +384,17 @@ while answ:
         ret_money(retmoney)
 
     if 'spl_answ' not in globals() or ('spl_answ' in globals() and round_answers[spl_answ] != True):
-        dup_answ = input("Do you want to duplicate your bet?(y/n): ")
+        if player.account >= player.bet.value:
+            dup_answ = input("Do you want to duplicate your bet?(y/n): ")
 
-        while dup_answ not in round_answers.keys():
-            dup_answ = input("Please introduce a valid response\nDo you want to duplicate your bet?(y/n): ")
-        
-        if round_answers[dup_answ] == True:
-            player.duplicate()
-            p_sum, c_sum = play_round(player.hand,croupier.hand)
-            retmoney = comp_values(p_sum, c_sum)
-            ret_money(retmoney)
+            while dup_answ not in round_answers.keys():
+                dup_answ = input("Please introduce a valid response\nDo you want to duplicate your bet?(y/n): ")
+            
+            if round_answers[dup_answ] == True:
+                player.duplicate()
+                p_sum, c_sum = play_round(player.hand,croupier.hand)
+                retmoney = comp_values(p_sum, c_sum)
+                ret_money(retmoney)
         else:
             p_sum, c_sum = play_round(player.hand,croupier.hand)
             retmoney = comp_values(p_sum, c_sum)
