@@ -248,25 +248,60 @@ def play_round(p_hand,c_hand):
             if morecards == 'y':
                 p_hand.add_card(deck.deal_one())            
     else:
-        while p_hand.sum_values < 21:
-            morecards = input("Want to add an additional card?(y/n): ")
-            while morecards not in answ:
-                morecards = input("Invalid answer\nWant to add additional card?(y/n): ")
-            if morecards == 'y':
-                p_hand.add_card(deck.deal_one())
-    
-    while c_hand.sum_values <= 17:
+        cycle = True
+        while cycle:
+            if p_hand.sum_values < 21:
+                morecards = input("Want to add an additional card?(y/n): ")
+                while morecards not in answ:
+                    morecards = input("Invalid answer\nWant to add additional card?(y/n): ")
+                if morecards == 'y':
+                    p_hand.add_card(deck.deal_one())
+                    print(f"New card added: {p_hand.hand_cards[-1]}")
+                    print(f"Actual player hand value: {p_hand.sum_values}")
+                elif morecards == 'n':
+                    cycle = False
+            else:
+                cycle = False
+
+    while c_hand.sum_values < 17:
         c_hand.add_card(deck.deal_one())
+
+    print("Player cards:")
+    for p_card in p_hand.hand_cards:
+        print(p_card)
+    print(f"Player value: {p_hand.sum_values}")
     
-    
+    print("Croupier cards:")
+    for c_card in c_hand.hand_cards:
+        print(c_card)
+    print(f"Croupier values {c_hand.sum_values}")
+
     return p_hand.sum_values,c_hand.sum_values
 
 def comp_values(p_value, c_value):
     """This function is going to compare values of both
     hands and determine if player wins or not and return
-    either True or False which will be passed to ret_money()"""
-    pass
+    either win, lost or tie which will be passed to ret_money()"""
 
+    if p_value > 21:
+        print("Surpassed 21!, player looses")
+        return "Lost"
+    
+    if not p_value > 21 and c_value > 21:
+        print("Surpassed 21! croupier looses")
+        return "Win"
+
+    if not p_value > 21 and not c_value > 21:
+        if p_value == c_value:
+            print("It's a tie, player recovers money")
+            return "Tie"
+        elif p_value > c_value:
+            print("Player has higher value! Player wins!")
+            return "Win"
+        else:
+            print("Player has lower value! Player looses!")
+            return "Lost"  
+    
 def ret_money(player_win):
     """This function is going to return the money of the bet
     and the secure to the player depending on the input"""
@@ -338,7 +373,17 @@ while answ:
         if round_answers[spl_answ] == True:
             player.split() # Depending on if split or not two pathways can be followed
 
-    if 'spl_answ' not in locals():
+    if 'spl_answ' in globals() and round_answers[spl_answ] == True:
+        print("Hand 1 results:")
+        p_sum, c_sum = play_round(player.hand[0],croupier.hand)
+        retmoney = comp_values(p_sum, c_sum)
+        ret_money(retmoney)
+        print("Hand 2 results:")
+        p_sum, c_sum = play_round(player.hand[1],croupier.hand)
+        retmoney = comp_values(p_sum, c_sum)
+        ret_money(retmoney)
+
+    if 'spl_answ' not in globals() or ('spl_answ' in globals() and round_answers[spl_answ] != True):
         dup_answ = input("Do you want to duplicate your bet?(y/n): ")
 
         while dup_answ not in round_answers.keys():
@@ -346,30 +391,23 @@ while answ:
         
         if round_answers[dup_answ] == True:
             player.duplicate()
-            play_round()
-
-    if 'spl_answ' in locals() and round_answers[spl_answ] == True:
-        # play_round() para las dos manos, ver como lo hago
-        pass
-    
-    if 'spl_answ' in locals() and round_answers[spl_answ] != True:
-        play_round()
+            p_sum, c_sum = play_round(player.hand,croupier.hand)
+            retmoney = comp_values(p_sum, c_sum)
+            ret_money(retmoney)
+        else:
+            p_sum, c_sum = play_round(player.hand,croupier.hand)
+            retmoney = comp_values(p_sum, c_sum)
+            ret_money(retmoney)
             
 
 
 
-    
-
-    # hacer una función para añadir cartas y posteriormente comparar con croupier y usarla en los diferentes outputs
+# Only lacks function detecting if 
 
 
 
 
 
-    """
-
-    *despues simplemente preguntar si el jugador quiere añadir cartas
-    Hay que chequear constantemente que el valor de las cartas no sea superior a 21, si no el jugador pierde"""
 
 
         # while loop after card_distr() to check for player answer and options
@@ -393,14 +431,25 @@ print("Thank you for playing!\nCome back soon!")
 # This is just for proofs
 card1 = Cards("Diamonds","Ace")
 card2 = Cards("Spades","Ace")
+card3 = Cards("Diamonds", "6")
+deck = Deck()
 
 player = Player("Pablo", 500)
-player.p_bet(125)
 player.p_hand()
+croupier = Croupier("Croupier")
+croupier.c_hand()
+
 
 
 player.hand.add_card(card1)
 player.hand.add_card(card2)
+croupier.hand.add_card(card1)
+croupier.hand.add_card(card2)
+
+
+p_value, c_value  = play_round(player.hand,croupier.hand)
+
+comp_values(p_value,c_value)
 
 
 
