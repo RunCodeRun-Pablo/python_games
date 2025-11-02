@@ -231,6 +231,9 @@ def set_bet():
                 print("A valid bet should be entered")
         except ValueError:
             continue
+
+def play_round():
+    pass
     
 
 while initiate:
@@ -289,28 +292,46 @@ while answ:
         if round_answers[sec_answ] == True: # Remember to later include a check if secure should be lost or not
             player.secure()
 
+    
     if (player.hand.hand_cards_values[0] == player.hand.hand_cards_values[1] or player.hand.hand_cards_values[1] == 1) and player.account >= player.bet.value: # Check if player has two equal cards and wants to split
         spl_answ = input("Want to split your bet?(y/n): ")
 
         while spl_answ not in round_answers.keys():
-            spl_answ = input("Please introduce a valid response\n Do you want to split your bet?(y/n): ")
+            spl_answ = input("Please introduce a valid response\nDo you want to split your bet?(y/n): ")
         
         if round_answers[spl_answ] == True:
             player.split() # Depending on if split or not two pathways can be followed
 
+    if 'spl_answ' not in locals():
+        dup_answ = input("Do you want to duplicate your bet?(y/n): ")
+
+        while dup_answ not in round_answers.keys():
+            dup_answ = input("Please introduce a valid response\nDo you want to duplicate your bet?(y/n): ")
+        
+        if round_answers[dup_answ] == True:
+            player.duplicate()
+            play_round()
+
+    if 'spl_answ' in locals() and round_answers[spl_answ] == True:
+        # play_round() para las dos manos, ver como lo hago
+        pass
+    
+    if 'spl_answ' in locals() and round_answers[spl_answ] != True:
+        play_round()
+            
+
+
 
     
 
-
+    # hacer una función para añadir cartas y posteriormente comparar con croupier y usarla en los diferentes outputs
 
 
 
 
 
     """
-    * siguiente chequeo es ver si el jugador tiene dos cartas con el mismo valor y quiere
-    hacer split, si el jugador splitea no puede duplicar pero si puede tener seguro
-    * siguiente chequeo es ver si el jugador quiere duplicar, puede tener seguro pero no splitear
+
     *despues simplemente preguntar si el jugador quiere añadir cartas
     Hay que chequear constantemente que el valor de las cartas no sea superior a 21, si no el jugador pierde"""
 
@@ -333,7 +354,7 @@ while answ:
 
 print("Thank you for playing!\nCome back soon!")
 
-# This is just for proofs
+"""# This is just for proofs
 card1 = Cards("Diamonds","Ace")
 card2 = Cards("Spades","Ace")
 
@@ -341,17 +362,10 @@ player = Player("Pablo", 500)
 player.p_bet(125)
 player.p_hand()
 
+
 player.hand.add_card(card1)
-player.hand.add_card(card2)
+player.hand.add_card(card2)"""
 
 
-if (player.hand.hand_cards_values[0] == player.hand.hand_cards_values[1] or player.hand.hand_cards_values[1] == 1) and player.account >= player.bet.value: # Check if player has two equal cards and wants to split
-        spl_answ = input("Want to split your bet?(y/n): ")
 
-        while spl_answ not in round_answers.keys():
-            spl_answ = input("Please introduce a valid response\nDo you want to split your bet?(y/n): ")
-        
-        if round_answers[spl_answ] == True:
-            player.split() 
-else:
-    print("NOT ENOUGH MONEY")
+            
