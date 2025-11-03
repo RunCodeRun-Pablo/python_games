@@ -1,28 +1,3 @@
-"""
-
-
-Every player can bet whatever they want (with a minimum and a maximum depending
-on the casino). If a player gets a blackjack, he obtains his bet+bet*3/2. If the
-croupier first card is an ace, you can secure your bet in case the croupier could
-have a blackjack. This secure is a bet max the half of your initial bet, if the
-croupier has a blackjack you win secure bet*2 but loose your initial bet (tie),
-if the croupier hasn't a blackjack, you loose the secure but continues with your
-initial hand
-
-To double means that you can duplicate your initial bet for receiving just one more
-additional card, you can only duplicate with your first two cards. Finally, to 
-separate happens when your first two cards have the same value, and you can bet them
-in two distinct hands, but you also have to bet the same you bet for the first hand.
-
-Possible outcomes:
-Player has a blackjack: wins bet + bet*3/2
-Croupier has a blacjack: player looses bet
-Both have blackjack: tie, player recovers money without winning
-Player wins croupier: wins bet*2
-Same score: tie, player recovers money
-If anyone surpasses 21: automatic loose"""
-
-
 import random
 
 suits = ("Diamonds","Spades","Hearts","Clubs")
