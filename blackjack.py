@@ -1,23 +1,5 @@
-"""Blackjack rules:
-It is played with 4 decks of 52 cards, and consists in obtaining
-a sum of 21 points without surpassing this amount. Each player plays
-against the crupier, and either player or croupier have distinct rules
-croupier has to ask for cards whenever his score is less than 16, and
-stands if it is 17 or more.
+"""
 
-Game starts with croupier giving two cards to each player, if the player directly
-obtains a blackjack he wins the round unless croupier also has a blackjack.
-The croupier also has two cards in the table. Cards are distributed using
-the following order: first card for the player, first card for the croupier,
-second card for the player, second hand for the croupier. 
-
-In the first round, the players can see both of their cards but only the first 
-card of the croupier, and they can choose whether they want more cards or if
-they stand. Players can ask for as much cards as they want meanwhile they do not
-surpass a score of 21, else they will loose. Once a player stands, the croupier
-shows his second card and adds as much cards as needed to have a number equal or
-bigger to 17, then the numbers of the player and the croupier are compared to 
-know the winner.
 
 Every player can bet whatever they want (with a minimum and a maximum depending
 on the casino). If a player gets a blackjack, he obtains his bet+bet*3/2. If the
@@ -118,6 +100,7 @@ class Bet:
     
     def reset(self): # Resets the bet, although maybe its not necessary
         self.value = 0
+        self.secure = 0
         
 
 class Croupier:
@@ -150,10 +133,9 @@ class Player:
             print("Not enough money for this bet")
             return False
         
-    def p_income(self): #Adds money to the player account
+    def p_income(self,money): #Adds money to the player account
         try:
-            self.account = self.bet.value + self.account
-            self.bet = 0
+            self.account = money + self.account
         except AttributeError:
             return f"{self.name} has no bet"
 
@@ -171,10 +153,12 @@ class Player:
         self.bet.bet_secure()
         self.account -= self.bet.secure
         print(f"Your actual bet is {self.bet.value}€ plus {self.bet.secure}€ secure")
+        print(f"Your money account is: {self.account}")
         
     def split(self): # Splits initial bet into two bets, a list of bets for example
         self.account = self.account - self.bet.value
-        self.bet = [self.bet,self.bet]
+        bet1,bet2 = Bet(self.bet.value),Bet(self.bet.value)
+        self.bet = [bet1,bet2]
         hand1,hand2 = Hand(),Hand()
         hand1.add_card(self.hand.hand_cards[0])
         hand2.add_card(self.hand.hand_cards[1])
@@ -308,7 +292,7 @@ def comp_values(p_value, c_value):
 
     if not p_value > 21 and not c_value > 21:
         if p_value == c_value:
-            print("It's a tie, player recovers money")
+            print("It's a tie!")
             return "Tie"
         elif p_value > c_value:
             print("Player has higher value! Player wins!")
@@ -317,10 +301,35 @@ def comp_values(p_value, c_value):
             print("Player has lower value! Player looses!")
             return "Lost"  
     
-def ret_money(player_win):
+def ret_money(player_win,player,croupier,hand_index=None):
     """This function is going to return the money of the bet
     and the secure to the player depending on the input"""
-    pass
+    
+    if type(player.bet) == list:
+        current_bet = player.bet[hand_index]
+    else:
+        current_bet = player.bet
+    
+    if player_win == "Win":
+        current_bet.value += current_bet.value
+        print(f"You win this round, total money won: {current_bet.value}")
+        player.p_income(current_bet.value)
+        print(f"Total money in account: {player.account}")
+    elif player_win == "Lost":
+        if croupier.hand.sum_values == 21 and hasattr(current_bet, 'secure'):
+            print(f"You lost but had a secure, money won: {current_bet.secure*2}")
+            current_bet.value = current_bet.secure*2
+            player.p_income(current_bet.value)
+            print(f"Total money in account: {player.account}")
+        else:
+            print("You lost this round")
+            print(f"Total money in account: {player.account}")
+    elif player_win == "Tie":
+        print("You recover your money!")
+        player.p_income(current_bet.value)
+        print(f"Total money in account: {player.account}")
+
+
 
 while initiate:
     if start_game == "y":
@@ -338,6 +347,7 @@ round_answers = {"y": True, "n": False} # Will make easier to transform player a
 answ = True
 
 while answ: 
+    spl_answ = "n"
     print("Round initiated")
 
     if player.account > 0: # First check, if player has enough money in the account and if the bet can be made
@@ -361,44 +371,52 @@ while answ:
             print(f"Croupier cards: [{croupier.hand.hand_cards[0]}][{croupier.hand.hand_cards[1]}]\nCroupier actual value: [{croupier.hand.sum_values}]")
             print(f"You win this round, total money won: {player.bet.value+player.bet.value*1.5}")
             player.bet.value += player.bet.value*1.5
-            player.p_income()
+            player.p_income(player.bet.value)
 
         elif player.hand.sum_values == croupier.hand.sum_values:
             print(f"Your cards: [{player.hand.hand_cards[0]}][{player.hand.hand_cards[1]}]\nYour value: [{player.hand.sum_values}]")
             print(f"Croupier cards: [{croupier.hand.hand_cards[0]}][{croupier.hand.hand_cards[1]}]\nCroupier actual value: [{croupier.hand.sum_values}]")
             print(f"It is a tie!, total money won: {player.bet.value}")
-            player.p_income()
+            player.p_income(player.bet.value)
 
-    if croupier.hand.hand_cards[0].ranks == "Ace" and player.account >= player.bet.value/2: # Check if player wants to secure bet
+    elif croupier.hand.hand_cards[0].ranks == "Ace" and player.account >= player.bet.value/2 and player.hand.sum_values < 21: # Check if player wants to secure bet
         sec_answ = input("Want to secure your bet?(y/n): ")
 
         while sec_answ not in round_answers.keys():
             sec_answ = input("Please introduce a valid response\nDo you want to secure bet?(y/n): ")
 
-        if round_answers[sec_answ] == True: # Remember to later include a check if secure should be lost or not
+        if round_answers[sec_answ] == True:
             player.secure()
+        
+        elif round_answers[sec_answ] != True and (player.hand.hand_cards[0].ranks == player.hand.hand_cards[1].ranks or player.hand.hand_cards_values[1] == 1) and player.account >= player.bet.value:
+            spl_answ = input("Want to split your bet?(y/n): ") # Just in case player do not want to secure but has duplicated cards and want to split
 
-    
-    if (player.hand.hand_cards[0].ranks == player.hand.hand_cards[1].ranks or player.hand.hand_cards_values[1] == 1) and player.account >= player.bet.value: # Check if player has two equal cards and wants to split
+            while spl_answ not in round_answers.keys():
+                    spl_answ = input("Please introduce a valid response\nDo you want to split your bet?(y/n): ")
+                    
+            if round_answers[spl_answ] == True:
+                player.split() 
+            
+    elif (player.hand.hand_cards[0].ranks == player.hand.hand_cards[1].ranks or player.hand.hand_cards_values[1] == 1) and player.account >= player.bet.value: # Check if player has two equal cards and wants to split
         spl_answ = input("Want to split your bet?(y/n): ")
 
         while spl_answ not in round_answers.keys():
             spl_answ = input("Please introduce a valid response\nDo you want to split your bet?(y/n): ")
         
         if round_answers[spl_answ] == True:
-            player.split() # Depending on if split or not two pathways can be followed
+            player.split() 
 
-    if 'spl_answ' in globals() and round_answers[spl_answ] == True:
+    if round_answers[spl_answ] == True:
         print("Hand 1 results:")
         p_sum, c_sum = play_round(player.hand[0],croupier.hand)
         retmoney = comp_values(p_sum, c_sum)
-        ret_money(retmoney)
+        ret_money(retmoney,player,croupier,hand_index=0)
         print("Hand 2 results:")
         p_sum, c_sum = play_round(player.hand[1],croupier.hand)
         retmoney = comp_values(p_sum, c_sum)
-        ret_money(retmoney)
+        ret_money(retmoney,player,croupier,hand_index=1)
 
-    if ('spl_answ' not in globals() or ('spl_answ' in globals() and round_answers[spl_answ] != True)) and player.account >= player.bet.value:
+    elif round_answers[spl_answ] != True and player.hand.sum_values < 21 and player.account >= player.bet.value:
         dup_answ = input("Do you want to duplicate your bet?(y/n): ")
 
         while dup_answ not in round_answers.keys():
@@ -408,33 +426,19 @@ while answ:
             player.duplicate()
             p_sum, c_sum = play_round(player.hand,croupier.hand)
             retmoney = comp_values(p_sum, c_sum)
-            ret_money(retmoney)
+            ret_money(retmoney,player,croupier)
         elif round_answers[dup_answ] != True:
             p_sum, c_sum = play_round(player.hand,croupier.hand)
             retmoney = comp_values(p_sum, c_sum)
-            ret_money(retmoney)
-                
-
-
-
-# Only lacks function detecting if 
-
-
-
-
-
-
-
-        # while loop after card_distr() to check for player answer and options
-    # Another while loop after player play to check for croupier play
-
-
-
-
-
-    
+            ret_money(retmoney,player,croupier)
+    elif player.hand.sum_values < 21:
+        p_sum, c_sum = play_round(player.hand,croupier.hand)
+        retmoney = comp_values(p_sum, c_sum)
+        ret_money(retmoney,player,croupier)
 
     # After a round finishes player gets asked
+    player.bet = None
+    player.hand = None
     rnd_answ = input("Want to play another round?(y/n): ")
     while rnd_answ not in round_answers.keys():
         rnd_answ = input("Please enter valid answer \nWant to play another round?(y/n): ")
@@ -442,30 +446,3 @@ while answ:
     answ = round_answers[rnd_answ]
 
 print("Thank you for playing!\nCome back soon!")
-
-# This is just for proofs
-card1 = Cards("Diamonds","Ace")
-card2 = Cards("Spades","Ace")
-card3 = Cards("Diamonds", "6")
-deck = Deck()
-
-player = Player("Pablo", 500)
-player.p_hand()
-croupier = Croupier("Croupier")
-croupier.c_hand()
-
-
-
-player.hand.add_card(card1)
-player.hand.add_card(card2)
-croupier.hand.add_card(card1)
-croupier.hand.add_card(card2)
-
-
-p_value, c_value  = play_round(player.hand,croupier.hand)
-
-comp_values(p_value,c_value)
-
-
-
-            
